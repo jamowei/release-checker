@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/release-checker/release-checker/internal/types"
+	"github.com/jamowei/release-checker/internal/types"
 )
 
 // Manager handles state persistence for the release checker

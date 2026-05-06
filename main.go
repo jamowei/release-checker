@@ -6,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/release-checker/release-checker/internal/config"
-	"github.com/release-checker/release-checker/internal/fetcher"
-	"github.com/release-checker/release-checker/internal/state"
+	"github.com/jamowei/release-checker/internal/config"
+	"github.com/jamowei/release-checker/internal/fetcher"
+	"github.com/jamowei/release-checker/internal/state"
 )
 
 var (

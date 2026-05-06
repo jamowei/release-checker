@@ -1,4 +1,4 @@
-module github.com/release-checker/release-checker
+module github.com/jamowei/release-checker
 
 go 1.21
 

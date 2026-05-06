@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/release-checker/release-checker/internal/types"
+	"github.com/jamowei/release-checker/internal/types"
 )
 
 // Fetcher handles fetching the latest git tag from a repository

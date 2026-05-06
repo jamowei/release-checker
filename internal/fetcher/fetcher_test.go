@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/release-checker/release-checker/internal/types"
+	"github.com/jamowei/release-checker/internal/types"
 )
 
 func TestFetcher_NewFetcher(t *testing.T) {

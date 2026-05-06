@@ -8,7 +8,7 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/release-checker/release-checker/internal/types"
+	"github.com/jamowei/release-checker/internal/types"
 )
 
 // Config paths to search (in order of precedence)
