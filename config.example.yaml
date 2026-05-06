@@ -1,0 +1,27 @@
+# Example configuration for release-checker
+# Copy this file to ~/.config/release-checker/config.yaml and customize
+
+# Optional: override state file location
+# Default: same directory as the binary (e.g., /usr/local/bin/release-checker-state.json)
+#state_file: "/var/lib/release-checker/state.json"
+
+apps:
+  - name: "kubectl"
+    # GitHub shorthand: expands to https://github.com/kubernetes/kubernetes.git
+    repo: "kubernetes/kubernetes"
+    enabled: true
+
+  - name: "terraform"
+    # Full HTTPS URL
+    repo: "https://github.com/hashicorp/terraform.git"
+    enabled: true
+
+  - name: "zig"
+    # Codeberg example
+    repo: "https://codeberg.org/ziglang/zig.git"
+    enabled: true
+
+  - name: "linux"
+    # Kernel.org example (host/path format)
+    repo: "git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux"
+    enabled: false
