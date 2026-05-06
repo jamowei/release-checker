@@ -41,15 +41,16 @@ jobs:
       run: |
         go build -o release-checker${{ matrix.goos == 'windows' && '.exe' || '' }} .
         
-    - name: Create archive
-      id: create_archive
-      run: |
-        if [[ "${{ matrix.goos }}" == "windows" ]]; then
-          zip release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip release-checker.exe
-          echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip" >> $GITHUB_OUTPUT
-        else
-          tar -czf release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz release-checker
-          echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" >> $GITHUB_OUTPUT
+     - name: Create archive
+       id: create_archive
+       run: |
+         if [[ "${{ matrix.goos }}" == "windows" ]]; then
+           zip release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip release-checker.exe
+           echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip" >> $GITHUB_OUTPUT
+         else
+           tar -czf release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz release-checker
+           echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" >> $GITHUB_OUTPUT
+         fi
           
     - name: Upload archive
       uses: actions/upload-artifact@v4
