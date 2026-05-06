@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+permissions:
+  contents: write # to be able to publish a GitHub release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+    outputs:
+      artifacts: ${{ steps.set_matrix.outputs.artifacts }}
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.26'
+        
+    - name: Cache Go modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/go-build
+          ~/go/pkg/mod
+        key: ${{ runner.os }}-go-${{ hashFiles('go.sum') }}
+        restore-keys: |
+          ${{ runner.os }}-go-
+    
+    - name: Test
+      run: go test -v ./...
+    
+    - name: Build binary
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+      run: |
+        go build -o release-checker${{ matrix.goos == 'windows' && '.exe' || '' }} .
+        
+    - name: Create archive
+      id: create_archive
+      run: |
+        if [[ "${{ matrix.goos }}" == "windows" ]]; then
+          zip release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip release-checker.exe
+          echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip" >> $GITHUB_OUTPUT
+        else
+          tar -czf release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz release-checker
+          echo "archive=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" >> $GITHUB_OUTPUT
+          
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-checker-${{ matrix.goos }}-${{ matrix.goarch }}
+        path: ${{ steps.create_archive.outputs.archive }}
+
+    - name: Set matrix outputs
+      id: set_matrix
+      run: |
+        echo "artifacts+=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.zip" >> $GITHUB_OUTPUT
+        echo "artifacts+=release-checker-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" >> $GITHUB_OUTPUT
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts
+        
+    - name: Create GitHub Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: artifacts/**/*
+        generate_release_notes: true
+        tag_name: ${{ github.ref_name }}
